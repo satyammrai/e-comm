@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>2nd Cart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+      url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 400px;
+    }
+    .product-card {
+      transition: all 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .cart-item:hover {
+      background-color: #f1f1f1;
+    }
+    .cart-sidebar {
+      transition: transform 0.3s ease-in-out;
+    }
+    .cart-open {
+      transform: translateX(0);
+    }
+    .cart-closed {
+      transform: translateX(100%);
+    }
+    .discount-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ef4444;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center">
+        <a href="#" class="text-2xl font-bold text-indigo-600">2nd Cart</a>
+        <nav class="hidden md:flex ml-10 space-x-8">
+          <a href="#" class="text-gray-700 hover:text-indigo-600">Home</a>
+          <a href="#" class="text-gray-700 hover:text-indigo-600">Shop</a>
+          <a href="#" class="text-gray-700 hover:text-indigo-600">Categories</a>
+          <a href="#" class="text-gray-700 hover:text-indigo-600">About</a>
+          <a href="#" class="text-gray-700 hover:text-indigo-600">Contact</a>
+        </nav>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="relative hidden md:block">
+          <input type="text" placeholder="Search products..." class="border border-gray-300 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+        <button id="cart-toggle" class="relative">
+          <i class="fas fa-shopping-cart text-gray-700 text-xl hover:text-indigo-600"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+        </button>
+        <button class="md:hidden">
+          <i class="fas fa-bars text-gray-700 text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero flex items-center justify-center text-white text-center px-4">
+    <div>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">SUMMER SALE 😎</h1>
+      <h2 class="text-4xl md:text-5xl font-bold mb-4"><span class="text-red-600 font-bold">LIVE NOW 🥳</span></h2>
+      <p class="text-xl mb-6">Up to 80% off on <span class="text-yellow-500 font-semibold">first purchase😘</span></p>
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full transition duration-300">SEE ITEMS</button>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="container mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold mb-8">1000+ WATCHES</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" alt="Electronics" class="w-full h-32 object-cover">
+        <div class="p-4">
+          <h3 class="font-bold mb-2">COLLECTION</h3>
+          <p class="text-sm text-gray-500 line-through">₹1,200</p>
+          <p class="text-lg text-green-600 font-semibold">Under ₹1,000</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="container mx-auto px-4 py-12 bg-gray-50">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-bold">Featured Products</h2>
+      <a href="#" class="text-indigo-600 hover:underline">View All</a>
+    </div>
+    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <!-- Cart Sidebar -->
+  <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg cart-sidebar cart-closed overflow-y-auto z-50">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold">Your Cart</h2>
+        <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div id="cart-items" class="mb-6">
+        <p id="empty-cart-message" class="text-gray-500 text-center py-10">Your cart is empty</p>
+      </div>
+      <div class="border-t border-gray-200 pt-4">
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-600">Subtotal:</span>
+          <span id="cart-subtotal" class="font-semibold">₹0.00</span>
+        </div>
+        <div class="flex justify-between mb-4">
+          <span class="text-gray-600">Shipping:</span>
+          <span id="cart-shipping" class="font-semibold">₹50.00</span>
+        </div>
+        <div class="flex justify-between text-lg font-bold mb-6">
+          <span>Total:</span>
+          <span id="cart-total">₹50.00</span>
+        </div>
+        <button id="checkout-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded transition duration-300 disabled:opacity-50" disabled>
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <h3 class="text-xl font-bold mb-4">2nd Cart </h3>
+        <p class="text-gray-400">we are thanks that you stepped in our website</p>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-4">Quick Links</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white">Shop</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-4">Customer Service</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white">Shipping Policy</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white">Returns</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white">Track Order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-4">Contact Us</h4>
+        <ul class="space-y-2 text-gray-400">
+          <li><i class="fas fa-map-marker-alt mr-2"></i> 59A Badshahpur, Gurugram (Haryana)</li>
+          <li><i class="fas fa-phone text-blue-500 mr-2"></i> <a href="tel:+919958923926" class="hover:underline">+91 9958923926</a></li>
+          <li><i class="fab fa-whatsapp text-green-500 mr-2"></i> <a href="https://wa.me/919958923926" class="hover:underline">+91 8076624956</a></li>
+          <li><i class="fab fa-instagram text-red-500 mr-2"></i> <a href="https://instagram.com/satya_raiii" class="hover:underline">satya_raiii</a></li>
+          <li>
+            <i class="fas fa-envelope text-yellow-500 mr-2"></i>
+            <a href="mailto:Satya.dcee@gmail.com" class="hover:underline">Satya.dcee@gmail.com</a>
+          </li>
+        </ul>
+        
+
+  <script>
+    const productsContainer = document.getElementById('products-container');
+    const products = [
+      {
+        id: 2,
+        name: "Wireless Headphones",
+        price: 2000,
+        discountedPrice: 800,
+        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+        rating: 4.5,
+        reviews: 120,
+        inStock: true,
+        discount: 60
+      }
+    ];
+
+    function formatINR(amount) {
+      return '₹' + amount.toLocaleString('en-IN');
+    }
+
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'bg-white rounded-lg p-4 shadow product-card relative';
+      card.innerHTML = `
+        <img src="${p.image}" alt="${p.name}" class="w-full h-40 object-cover rounded mb-4">
+        <div class="absolute top-2 right-2 discount-badge">-${p.discount}%</div>
+        <h3 class="font-semibold text-lg">${p.name}</h3>
+        <div class="flex items-center space-x-2 my-2">
+          <span class="text-gray-500 line-through">${formatINR(p.price)}</span>
+          <span class="text-indigo-600 font-bold">${formatINR(p.discountedPrice)}</span>
+        </div>
+        <p class="text-sm text-gray-500">${p.reviews} reviews</p>
+      `;
+      productsContainer.appendChild(card);
+    });
+  </script>
+</body>
+</html>
